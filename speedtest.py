@@ -1718,7 +1718,7 @@ def shell():
                 'be an int' % ', '.join('%s' % s for s in args.server)
             )
 
-        if len(args.server) == 1:
+        if args.server and len(args.server) == 1:
             printer('Retrieving information for the selected server...', quiet)
         else:
             printer('Selecting best server based on ping...', quiet)
