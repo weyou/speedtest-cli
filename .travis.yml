@@ -8,6 +8,8 @@ addons:
       - python2.4
       - python2.5
       - python2.6
+      - python3.2
+      - python3.3
 
 matrix:
   include:
@@ -21,9 +23,9 @@ matrix:
       env: TOXENV=py26
     - python: 2.7
       env: TOXENV=py27
-    - python: 3.2
+    - python: 2.7
       env: TOXENV=py32
-    - python: 3.3
+    - python: 2.7
       env: TOXENV=py33
     - python: 3.4
       env: TOXENV=py34
