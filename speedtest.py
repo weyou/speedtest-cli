@@ -1631,11 +1631,11 @@ def shell():
         raise SpeedtestCLIError('Cannot supply both --no-download and '
                                 '--no-upload')
 
-    if args.csv_header:
-        csv_header()
-
     if len(args.csv_delimiter) != 1:
         raise SpeedtestCLIError('--csv-delimiter must be a single character')
+
+    if args.csv_header:
+        csv_header(args.csv_delimiter)
 
     validate_optional_args(args)
 
