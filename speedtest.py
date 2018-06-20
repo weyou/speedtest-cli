@@ -163,16 +163,21 @@ except ImportError:
             self.flush()
 
     _py3_print = getattr(builtins, 'print')
-    _py3_utf8_stdout = _Py3Utf8Stdout()
+    if sys.stdout and hasattr(sys.stdout, 'fileno'):
+        _py3_utf8_stdout = _Py3Utf8Stdout()
+        def print_(*args, **kwargs):
+            """Wrapper function for py3 to print, with a utf-8 encoded stdout"""
+            kwargs['file'] = _py3_utf8_stdout
+            _py3_print(*args, **kwargs)
+    else:
+        def print_(*args, **kwargs):
+            pass
 
     def to_utf8(v):
         """No-op encode to utf-8 for py3"""
         return v
 
-    def print_(*args, **kwargs):
-        """Wrapper function for py3 to print, with a utf-8 encoded stdout"""
-        kwargs['file'] = _py3_utf8_stdout
-        _py3_print(*args, **kwargs)
+
 else:
     del __builtin__
 
@@ -515,7 +520,8 @@ class HTTPDownloader(threading.Thread):
 
     def run(self):
         try:
-            if (timeit.default_timer() - self.starttime) <= self.timeout:
+            if ((timeit.default_timer() - self.starttime) <= self.timeout and
+                    not SHUTDOWN_EVENT.isSet()):
                 f = urlopen(self.request)
                 while (not SHUTDOWN_EVENT.isSet() and
                         (timeit.default_timer() - self.starttime) <=
